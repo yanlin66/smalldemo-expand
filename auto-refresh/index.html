@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>demo</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+    <style>
+    	*{
+    		box-sizing:border-box;
+    	}
+    	.go{
+    		color: #999;
+    	}
+        #demo{
+        	display: inline-block;
+            width: 70px;height: 25px;line-height: 23px;text-align: center;border-radius:8px;border:1px solid #f4aaaa;
+            margin: 10px 10px;cursor: pointer;font-size: 14px;
+        }
+        .mask{
+            background: rgba(0,0,0,.2);
+            position: absolute;top: 0;left: 0;right: 0;bottom: 0;margin: auto;
+            border-radius: 5px;color: #fff;display: none;
+        }
+        .mask-bg{
+            width: 300px;height:180px;background: #fff;
+            position: absolute;top: 0;left: 0;right: 0;bottom: 0;margin: auto;
+            border-radius: 5px;color: #666;padding: 30px;
+        }
+        label{
+        	display: block;
+        }
+        .l{
+            width: 50%;height: 50px;background: #f2f2f2;position: absolute;left: 0;bottom: 0;text-align: center;line-height: 50px;
+        }
+        .r{
+            width: 50%;height: 50px;background: #f2f2f2;position: absolute;right: 0;bottom: 0;text-align: center;line-height: 50px;
+        }
+        .hide{
+            display: none;margin: 20px 0 0;
+        }
+        input[type='submit']{
+        	display: block;margin: 15px auto 0;border-radius: 2px;background-color: #fff;cursor: pointer;
+        }
+        #time2{
+        	width: 100px;
+        }
+        .margin-bottom{
+        	margin-bottom: 5px;
+        }
+        .no-time{
+        	position: absolute;top: -30px;left: 0;right: 0;margin: auto;background-color: #fff;
+        	height: 30px;line-height: 30px;color: #f4aaaa;text-align: center;display: none;
+        }
+        .close{
+        	position: absolute;top: 10px;right: 10px;width: 20px;height: 20px;text-align: center;line-height: 15px;cursor: pointer;border-radius: 50%;border:1px solid #666;font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="go">
+	设置是否自动刷新页面<div id="demo">点击</div><b></b>
+</div>
+
+<div class="mask">
+	<div class="mask-bg">
+		<label for="">
+	        设置自动刷新
+	        <input type="radio" name="type" id="yes" >是 <input type="radio" name="type" checked id="no">否 <br>
+	        <div class="hide">
+	        	<div class="margin-bottom">
+	        		请选择刷新时间：
+		            <select name="" id="time">
+		                <option value="30">30分钟</option>
+		                <option value="60">60分钟</option>
+		                <option value="90">90分钟</option>
+		                <option value="0">自由设置</option>
+		            </select>
+	        	</div>
+	            <div>
+	            	自由设置：<input type="number" id="time2" disabled="disabled">&nbsp;分钟
+	            </div>
+	            <input type="submit" value="保存修改">
+	        </div>
+	    </label>
+	    <div class="no-time">
+	    	最少设置一分钟哦
+	    </div>
+	    <div class="close">x</div>
+	</div>
+</div>
+<script>
+	function Refresh(mNum){
+		var sNum=mNum*60;
+		var num=0;
+		var t=setInterval(function(){
+			num++;
+			if(num>=sNum){
+				location.href="";
+				clearInterval(t);	
+			}
+			$(".go b").html(num);
+		},200)
+	}
+    $(function () {
+    	var flag,one=1;
+    	$(".close").click(function(){
+    		 $(".mask").fadeOut();
+    	})
+        $("#demo").click(function () {
+            $(".mask").fadeIn();
+        });
+        $("#yes").click(function () {
+            if($("#yes:checked")){
+                $(".hide").fadeIn();
+            }
+        });
+        $("#no").click(function () {
+            if($("#no:checked")){
+                $(".hide").fadeOut();
+            }
+        });
+        $("#time").change(function () {
+            $(".no-time").fadeOut();
+            if( $("#time").val()==0){
+                $("#time2").removeAttr("disabled");
+            }else{
+            	$("#time2").attr("disabled","disabled");
+            }
+
+        });
+        $("#time2").change(function () {
+            $(".no-time").fadeOut();
+        });
+        $("input[type='submit']").click(function () {
+        	if(one>1){
+        		$(".no-time").html("请不要重复设置").fadeIn();
+        	}else{
+        		if($("#time2").val()==""){
+	            	if($("#time").val()!=0){
+	            		$(".mask").fadeOut();
+		            	var mNum=$("#time").val();
+		            	Refresh(mNum);
+		            	one++;
+	            	}
+	            }else{
+	            	if($("#time2").val()==0){
+	            		$(".no-time").fadeIn();
+	            	}else{
+		            	$(".mask").fadeOut();
+		                var mNum=$("#time2").val();
+		            	Refresh(mNum);
+		            	one++;
+	            	}
+	            	
+	            }
+        	}
+            
+        });
+    });
+</script>
+</body>
+</html>
